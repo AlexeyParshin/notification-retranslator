@@ -1,21 +1,23 @@
-package com.petp.bankapp
+package com.petp.bankapp.activities
 
 import android.content.ComponentName
 import android.content.Intent
-import android.provider.Settings
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.TextUtils
+import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.ImageView
-import android.content.Context
-import android.app.NotificationManager
-import androidx.core.app.NotificationCompat
-import com.petp.bankapp.notifications.MyNotificationListenerService
+import com.petp.bankapp.R
+import com.petp.bankapp.service.MainFrameService
+import com.petp.bankapp.service.notifications.MyNotificationListenerService
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainFrameService: MainFrameService
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,9 +32,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
 
-        val sendNotificationImage = findViewById<ImageView>(R.id.sendNotificationImage)
-        sendNotificationImage.setOnClickListener {
-            sendNotification(this, "Notification Title", "Notification Text")
+        val appsButton = findViewById<Button>(R.id.appsButton)
+        appsButton.setOnClickListener {
+            val intent = Intent(this, AppsListActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -51,21 +54,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return false
-    }
-
-    private fun sendNotification(context: Context, title: String, text: String) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val notification = NotificationCompat.Builder(context)
-            .setSmallIcon(android.R.drawable.ic_dialog_alert)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
-
-        notificationManager.notify(0, notification)
-
-        val intent = Intent("com.petp.bankapp.NOTIFICATION_SENT")
-        context.sendBroadcast(intent)
     }
 }

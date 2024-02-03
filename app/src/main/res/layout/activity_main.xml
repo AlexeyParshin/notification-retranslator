@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".activities.MainActivity">
     <TextView
             android:layout_width="255dp"
             android:layout_height="685dp"
@@ -13,15 +13,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.5"
             app:layout_constraintHorizontal_bias="0.102" android:id="@+id/notificationsFrame"/>
-    <ImageView
+    <Button
+            android:text="Apps"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:srcCompat="@android:drawable/ic_menu_send"
-            android:id="@+id/sendNotificationImage"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.191" app:layout_constraintStart_toEndOf="@+id/notificationsFrame"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="this sends notifications"/>
+            android:layout_height="wrap_content" android:id="@+id/appsButton"
+            app:layout_constraintStart_toEndOf="@+id/notificationsFrame"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.067"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,16 @@
-package com.petp.bankapp
+package com.petp.bankapp.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.petp.bankapp.R
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class MainFrameService(private val activity: AppCompatActivity) {
 
     companion object {
@@ -27,7 +31,7 @@ class MainFrameService(private val activity: AppCompatActivity) {
 
     init {
         val intentFilter = IntentFilter(ACTION_UPDATE_NOTIFICATION)
-        activity.registerReceiver(notificationReceiver, intentFilter)
+        activity.registerReceiver(notificationReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
     }
 
     fun updateNotificationsFrame(text: String) {
