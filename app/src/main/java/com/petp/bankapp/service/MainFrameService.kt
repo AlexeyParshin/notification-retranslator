@@ -9,6 +9,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.petp.bankapp.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class MainFrameService(private val activity: AppCompatActivity) {
@@ -18,13 +22,14 @@ class MainFrameService(private val activity: AppCompatActivity) {
         const val EXTRA_NOTIFICATION_TEXT = "notification_text"
     }
 
-    private var isFirstNotification = true
+    private val notificationService = NotificationService(activity.applicationContext)
 
     private val notificationReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val text = intent.getStringExtra(EXTRA_NOTIFICATION_TEXT)
             if (text != null) {
-                updateNotificationsFrame(text)
+                notificationService.insertNotification(text)
+                updateNotificationsFrame()
             }
         }
     }
@@ -34,12 +39,13 @@ class MainFrameService(private val activity: AppCompatActivity) {
         activity.registerReceiver(notificationReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
     }
 
-    fun updateNotificationsFrame(text: String) {
-        val notificationsFrame = activity.findViewById<TextView>(R.id.notificationsFrame)
-        if (isFirstNotification) {
-            notificationsFrame.text = ""
-            isFirstNotification = false
+    fun updateNotificationsFrame() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val notifications = notificationService.getNotifications()
+            withContext(Dispatchers.Main) {
+                val notificationsFrame = activity.findViewById<TextView>(R.id.notificationsFrame)
+                notificationsFrame.text = notifications.joinToString("\n") { it.text }
+            }
         }
-        notificationsFrame.append("$text\n")
     }
 }

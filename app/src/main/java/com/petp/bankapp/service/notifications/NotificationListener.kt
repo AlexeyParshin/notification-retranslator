@@ -8,7 +8,7 @@ import android.service.notification.StatusBarNotification
 import androidx.annotation.RequiresApi
 import com.petp.bankapp.service.MainFrameService
 
-class MyNotificationListenerService : NotificationListenerService() {
+class NotificationListener : NotificationListenerService() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onNotificationPosted(sbn: StatusBarNotification) {

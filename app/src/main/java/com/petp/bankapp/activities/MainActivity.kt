@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.petp.bankapp.R
 import com.petp.bankapp.service.MainFrameService
-import com.petp.bankapp.service.notifications.MyNotificationListenerService
+import com.petp.bankapp.service.notifications.NotificationListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,14 +24,18 @@ class MainActivity : AppCompatActivity() {
 
         mainFrameService = MainFrameService(this)
 
-        // Start MyNotificationListenerService
-        val serviceIntent = Intent(this, MyNotificationListenerService::class.java)
+        // Start NotificationListener
+        val serviceIntent = Intent(this, NotificationListener::class.java)
         startService(serviceIntent)
 
         if (!isNotificationServiceEnabled()) {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
 
+        buttonInit()
+    }
+
+    private fun buttonInit() {
         val appsButton = findViewById<Button>(R.id.appsButton)
         appsButton.setOnClickListener {
             val intent = Intent(this, AppsListActivity::class.java)
