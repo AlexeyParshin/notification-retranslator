@@ -1,4 +1,4 @@
-package com.petp.bankapp.core.entity
+package com.petp.nretr.core.entity
 
 data class Notification(
     val id: Int,

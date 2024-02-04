@@ -1,4 +1,4 @@
-package com.petp.bankapp.activities.adapters
+package com.petp.nretr.activities.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
-import com.petp.bankapp.R
+import com.petp.nretr.R
 
 class AppsAdapter(private val context: Context, private val dataSource: List<ApplicationInfo>, private val checkedApps: Set<String>) : BaseAdapter() {
 

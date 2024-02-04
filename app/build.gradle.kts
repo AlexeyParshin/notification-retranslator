@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.petp.bankapp"
+    namespace = "com.petp.nretr"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.petp.bankapp"
+        applicationId = "com.petp.nretr"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

@@ -1,4 +1,4 @@
-package com.petp.bankapp.service
+package com.petp.nretr.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,7 +8,7 @@ import android.os.Build
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.petp.bankapp.R
+import com.petp.nretr.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 class MainFrameService(private val activity: AppCompatActivity) {
 
     companion object {
-        const val ACTION_UPDATE_NOTIFICATION = "com.petp.bankapp.UPDATE_NOTIFICATION"
+        const val ACTION_UPDATE_NOTIFICATION = "com.petp.nretr.UPDATE_NOTIFICATION"
         const val EXTRA_NOTIFICATION_TEXT = "notification_text"
     }
 

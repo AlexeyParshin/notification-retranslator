@@ -1,4 +1,4 @@
-package com.petp.bankapp.activities
+package com.petp.nretr.activities
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -8,8 +8,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
-import com.petp.bankapp.R
-import com.petp.bankapp.activities.adapters.AppsAdapter
+import com.petp.nretr.R
+import com.petp.nretr.activities.adapters.AppsAdapter
 
 class AppsListActivity : AppCompatActivity() {
 

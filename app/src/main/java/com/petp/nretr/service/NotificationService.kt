@@ -1,10 +1,10 @@
-package com.petp.bankapp.service
+package com.petp.nretr.service
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.petp.bankapp.core.entity.Notification
+import com.petp.nretr.core.entity.Notification
 
 class NotificationService(context: Context) {
     private val sharedPreferences: SharedPreferences =

@@ -1,4 +1,4 @@
-package com.petp.bankapp.activities
+package com.petp.nretr.activities
 
 import android.content.ComponentName
 import android.content.Intent
@@ -9,9 +9,9 @@ import android.text.TextUtils
 import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.petp.bankapp.R
-import com.petp.bankapp.service.MainFrameService
-import com.petp.bankapp.service.notifications.NotificationListener
+import com.petp.nretr.R
+import com.petp.nretr.service.MainFrameService
+import com.petp.nretr.service.notifications.NotificationListener
 
 class MainActivity : AppCompatActivity() {
 

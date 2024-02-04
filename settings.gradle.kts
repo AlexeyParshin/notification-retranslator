@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "bankapp"
+rootProject.name = "nretr"
 include(":app")
