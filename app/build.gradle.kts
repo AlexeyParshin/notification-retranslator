@@ -1,7 +1,14 @@
+import java.io.InputStream
+import java.util.*
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+val secretsProperties = Properties()
+val inputStream: InputStream = file("${rootDir}/secrets.properties").inputStream()
+secretsProperties.load(inputStream)
 
 android {
     namespace = "com.petp.nretr"
@@ -15,6 +22,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        android.buildFeatures.buildConfig = true
+
+        buildConfigField("String", "TELEGRAM_BOT_TOKEN", "\"${secretsProperties["TELEGRAM_BOT_TOKEN"]}\"")
+        buildConfigField("String", "TELEGRAM_CHAT_ID", "\"${secretsProperties["TELEGRAM_CHAT_ID"]}\"")
     }
 
     buildTypes {
@@ -33,6 +45,8 @@ android {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.1.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">nretr</string>
+    <string name="app_name">NotyR</string>
+    <string name="no_notifications_found">*No notifications found*</string>
+    <string name="appsButton">Apps</string>
+    <string name="clearButton">Clear</string>
 </resources>

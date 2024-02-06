@@ -15,8 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class MainFrameService(private val activity: AppCompatActivity) {
-
+class MainFrameService(private val activity: AppCompatActivity, private val telegramBotService: TelegramBotService) {
     companion object {
         const val ACTION_UPDATE_NOTIFICATION = "com.petp.nretr.UPDATE_NOTIFICATION"
         const val EXTRA_NOTIFICATION_TEXT = "notification_text"
@@ -30,13 +29,16 @@ class MainFrameService(private val activity: AppCompatActivity) {
             if (text != null) {
                 notificationService.insertNotification(text)
                 updateNotificationsFrame()
+                telegramBotService.sendNotification(text)
             }
         }
     }
 
     init {
-        val intentFilter = IntentFilter(ACTION_UPDATE_NOTIFICATION)
-        activity.registerReceiver(notificationReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        activity.registerReceiver(
+            notificationReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION),
+            Context.RECEIVER_NOT_EXPORTED
+        )
     }
 
     fun updateNotificationsFrame() {
@@ -44,7 +46,20 @@ class MainFrameService(private val activity: AppCompatActivity) {
             val notifications = notificationService.getNotifications()
             withContext(Dispatchers.Main) {
                 val notificationsFrame = activity.findViewById<TextView>(R.id.notificationsFrame)
-                notificationsFrame.text = notifications.joinToString("\n") { it.text }
+                notificationsFrame.text = notifications.joinToString("\n") { it }
+            }
+        }
+    }
+
+    fun clearMainFrame() {
+        // Clear the notifications from the notification service
+        notificationService.clearNotifications()
+
+        // Clear the notifications frame
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                val notificationsFrame = activity.findViewById<TextView>(R.id.notificationsFrame)
+                notificationsFrame.text = activity.getString(R.string.no_notifications_found)
             }
         }
     }

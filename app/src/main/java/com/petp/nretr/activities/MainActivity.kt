@@ -11,18 +11,24 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.petp.nretr.R
 import com.petp.nretr.service.MainFrameService
+import com.petp.nretr.service.NotificationService
+import com.petp.nretr.service.TelegramBotService
 import com.petp.nretr.service.notifications.NotificationListener
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainFrameService: MainFrameService
+    private lateinit var notificationService: NotificationService
+    private lateinit var telegramBotService: TelegramBotService
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainFrameService = MainFrameService(this)
+        notificationService = NotificationService(this.applicationContext)
+        telegramBotService = TelegramBotService(notificationService, this)
+        mainFrameService = MainFrameService(this, telegramBotService)
 
         // Start NotificationListener
         val serviceIntent = Intent(this, NotificationListener::class.java)
@@ -32,10 +38,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
 
-        buttonInit()
+        appsButtonInit()
+        clearButtonInit()
     }
 
-    private fun buttonInit() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun clearButtonInit() {
+        val clearNotificationsButton: Button = findViewById(R.id.clear_notifications_button)
+        clearNotificationsButton.setOnClickListener {
+            mainFrameService.clearMainFrame()
+        }
+    }
+
+    private fun appsButtonInit() {
         val appsButton = findViewById<Button>(R.id.appsButton)
         appsButton.setOnClickListener {
             val intent = Intent(this, AppsListActivity::class.java)
