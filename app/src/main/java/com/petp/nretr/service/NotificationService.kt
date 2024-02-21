@@ -5,8 +5,11 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.petp.nretr.core.entity.Notification
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class NotificationService(context: Context) {
+@AndroidEntryPoint
+class NotificationService @Inject constructor(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("notifications", Context.MODE_PRIVATE)
     private val gson = Gson()

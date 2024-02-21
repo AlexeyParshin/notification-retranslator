@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.petp.nretr.R
 import com.petp.nretr.service.MainFrameService
 import com.petp.nretr.service.notifications.NotificationListener
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainFrameService: MainFrameService
