@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @AndroidEntryPoint
-class MainFrameService(private val context: Context) {
-
+class MainFrameService @Inject constructor(private val context: Context, private val telegramBotService: TelegramBotService) {
     companion object {
         const val ACTION_UPDATE_NOTIFICATION = "com.petp.nretr.UPDATE_NOTIFICATION"
         const val EXTRA_NOTIFICATION_TEXT = "notification_text"
@@ -33,13 +32,16 @@ class MainFrameService(private val context: Context) {
             if (text != null) {
                 notificationService.insertNotification(text)
                 updateNotificationsFrame()
+                telegramBotService.sendNotification(text)
             }
         }
     }
 
     init {
-        val intentFilter = IntentFilter(ACTION_UPDATE_NOTIFICATION)
-        context.registerReceiver(notificationReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        context.registerReceiver(
+            notificationReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION),
+            Context.RECEIVER_NOT_EXPORTED
+        )
     }
 
     fun updateNotificationsFrame() {
@@ -47,7 +49,20 @@ class MainFrameService(private val context: Context) {
             val notifications = notificationService.getNotifications()
             withContext(Dispatchers.Main) {
                 val notificationsFrame = context.findViewById<TextView>(R.id.notificationsFrame)
-                notificationsFrame.text = notifications.joinToString("\n") { it.text }
+                notificationsFrame.text = notifications.joinToString("\n") { it }
+            }
+        }
+    }
+
+    fun clearMainFrame() {
+        // Clear the notifications from the notification service
+        notificationService.clearNotifications()
+
+        // Clear the notifications frame
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                val notificationsFrame = activity.findViewById<TextView>(R.id.notificationsFrame)
+                notificationsFrame.text = activity.getString(R.string.no_notifications_found)
             }
         }
     }

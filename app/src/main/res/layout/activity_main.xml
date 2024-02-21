@@ -9,19 +9,27 @@
     <TextView
             android:layout_width="255dp"
             android:layout_height="685dp"
-            android:text="\*no notifications*"
+            android:text="@string/no_notifications_found"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.5"
             app:layout_constraintHorizontal_bias="0.102" android:id="@+id/notificationsFrame"/>
     <Button
-            android:text="Apps"
+            android:text="@string/appsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/appsButton"
             app:layout_constraintStart_toEndOf="@+id/notificationsFrame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.067"/>
+    <Button
+            android:text="@string/clearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/clear_notifications_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appsButton" app:layout_constraintVertical_bias="0.057"
+            app:layout_constraintStart_toEndOf="@+id/notificationsFrame" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
