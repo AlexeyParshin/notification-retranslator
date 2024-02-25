@@ -50,6 +50,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.1.0")
     implementation("com.google.dagger:hilt-android:2.50")
+    implementation("androidx.lifecycle:lifecycle-service:2.7.0")
     kapt("com.google.dagger:hilt-compiler:2.50")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.core:core-ktx:1.12.0")

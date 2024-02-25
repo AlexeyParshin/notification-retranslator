@@ -1,6 +1,5 @@
 package com.petp.nretr.activities
 
-import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,13 +9,15 @@ import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.petp.nretr.R
 import com.petp.nretr.activities.adapters.AppsAdapter
+import com.petp.nretr.com.petp.nretr.repository.CheckedAppsRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AppsListActivity : AppCompatActivity() {
 
-    companion object {
-        private const val SHARED_PREFS_NAME = "checked_apps"
-        private const val CHECKED_APPS_KEY = "checked_app_package_names"
-    }
+    @Inject
+    lateinit var checkedAppsRepository: CheckedAppsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,18 +61,16 @@ class AppsListActivity : AppCompatActivity() {
             } else {
                 checkedApps.add(app.packageName)
             }
-            saveCheckedApps(checkedApps)
+            saveCheckedApps(checkedApps.toSet())
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun loadCheckedApps(): MutableSet<String> {
-        val sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getStringSet(CHECKED_APPS_KEY, emptySet())?.toMutableSet() ?: mutableSetOf()
+        return checkedAppsRepository.loadCheckedApps()
     }
 
-    private fun saveCheckedApps(checkedApps: MutableSet<String>) {
-        val sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putStringSet(CHECKED_APPS_KEY, checkedApps).commit()
+    private fun saveCheckedApps(checkedApps: Set<String>) {
+        checkedAppsRepository.saveCheckedApps(checkedApps)
     }
 }

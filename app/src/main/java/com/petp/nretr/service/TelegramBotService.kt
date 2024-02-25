@@ -1,8 +1,8 @@
 package com.petp.nretr.service
 
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.ServiceLifecycleDispatcher
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.Dispatcher
@@ -10,13 +10,20 @@ import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.ParseMode
 import com.petp.nretr.BuildConfig
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TelegramBotService(
-    private val notificationService: NotificationService,
-    private val lifecycleOwner: LifecycleOwner
-) {
+@AndroidEntryPoint
+class TelegramBotService @Inject constructor() : LifecycleService() {
+    @Inject
+    lateinit var notificationService: NotificationService
+
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
 
     private val chatId = ChatId.fromId(BuildConfig.TELEGRAM_CHAT_ID.toLong())
 
@@ -28,12 +35,25 @@ class TelegramBotService(
         }
     }
 
-    init {
+    private val serviceLifecycleDispatcher = ServiceLifecycleDispatcher(this)
+
+    override fun onCreate() {
+        super.onCreate()
+        serviceLifecycleDispatcher.onServicePreSuperOnCreate()
+        serviceLifecycleDispatcher.onServicePreSuperOnBind()
+        onStart()
+    }
+
+    private fun onStart() {
         bot.startPolling()
     }
 
+    private fun onStop() {
+        bot.stopPolling()
+    }
+
     fun sendNotification(notification: String) {
-        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch {
             bot.sendMessage(chatId, notification).fold(
                 {
                     Log.i("TelegramBotService", "Message sent: $notification")
@@ -52,7 +72,7 @@ class TelegramBotService(
     }
 
     private fun sendHistory() {
-        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch {
             val notifications = notificationService.getNotifications()
             val message = if (notifications.isNotEmpty()) {
                 notifications.joinToString("\n")
@@ -68,5 +88,12 @@ class TelegramBotService(
                 },
             )
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel() // cancel the job when the service is destroyed
+        serviceLifecycleDispatcher.onServicePreSuperOnDestroy()
+        onStop()
     }
 }

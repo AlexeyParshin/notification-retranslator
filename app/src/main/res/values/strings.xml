@@ -3,4 +3,5 @@
     <string name="no_notifications_found">*No notifications found*</string>
     <string name="appsButton">Apps</string>
     <string name="clearButton">Clear</string>
+    <string name="sendNotification">Send</string>
 </resources>

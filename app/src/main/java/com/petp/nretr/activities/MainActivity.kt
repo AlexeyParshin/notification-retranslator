@@ -1,39 +1,57 @@
 package com.petp.nretr.activities
 
-import android.content.ComponentName
-import android.content.Intent
+import android.content.*
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.TextUtils
 import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.petp.nretr.R
 import com.petp.nretr.service.MainFrameService
-import com.petp.nretr.service.NotificationService
-import com.petp.nretr.service.TelegramBotService
-import com.petp.nretr.service.notifications.NotificationListener
+import com.petp.nretr.service.MainFrameService.Companion.ACTION_CLEAR_NOTIFICATION_FRAME
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var mainFrameService: MainFrameService
 
-    private lateinit var mainFrameService: MainFrameService
-    private lateinit var notificationService: NotificationService
-    private lateinit var telegramBotService: TelegramBotService
+    companion object {
+        const val ACTION_UPDATE_NOTIFICATION_FRAME = "com.petp.nretr.UPDATE_NOTIFICATION_FRAME"
+        const val NEW_NOTIFICATIONS = "new_notifications"
+    }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private val frameUpdateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val notifications = intent.getStringArrayListExtra(NEW_NOTIFICATIONS)
+            if (notifications != null) {
+                updateNotificationsFrame(notifications)
+            }
+        }
+    }
+
+    private val clearFrameReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            clearNotificationsFrame()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        notificationService = NotificationService(this.applicationContext)
-        telegramBotService = TelegramBotService(notificationService, this)
-        mainFrameService = MainFrameService(this, telegramBotService)
+        registerReceiver(frameUpdateReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION_FRAME), RECEIVER_NOT_EXPORTED)
+        registerReceiver(clearFrameReceiver, IntentFilter(ACTION_CLEAR_NOTIFICATION_FRAME), RECEIVER_NOT_EXPORTED)
 
-        // Start NotificationListener
-        val serviceIntent = Intent(this, NotificationListener::class.java)
+        // do i need this?
+        val serviceIntent = Intent(this, MainFrameService::class.java)
         startService(serviceIntent)
 
         if (!isNotificationServiceEnabled()) {
@@ -44,11 +62,10 @@ class MainActivity : AppCompatActivity() {
         clearButtonInit()
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun clearButtonInit() {
         val clearNotificationsButton: Button = findViewById(R.id.clear_notifications_button)
         clearNotificationsButton.setOnClickListener {
-            mainFrameService.clearMainFrame()
+            mainFrameService.clearNotifications()
         }
     }
 
@@ -63,17 +80,20 @@ class MainActivity : AppCompatActivity() {
     private fun isNotificationServiceEnabled(): Boolean {
         val pkgName = packageName
         val flat = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
-        if (!flat.isNullOrEmpty()) {
-            val names = flat.split(":").toTypedArray()
-            for (name in names) {
-                val cn = ComponentName.unflattenFromString(name)
-                if (cn != null) {
-                    if (TextUtils.equals(pkgName, cn.packageName)) {
-                        return true
-                    }
-                }
-            }
+        return flat?.split(":")?.any { ComponentName.unflattenFromString(it)?.packageName == pkgName } ?: false
+    }
+
+    private fun updateNotificationsFrame(notifications: List<String>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val notificationsFrame = findViewById<TextView>(R.id.notificationsFrame)
+            notificationsFrame.text = notifications.joinToString("\n") { it }
         }
-        return false
+    }
+
+    private fun clearNotificationsFrame() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val notificationsFrame = findViewById<TextView>(R.id.notificationsFrame)
+            notificationsFrame.text = getString(R.string.no_notifications_found)
+        }
     }
 }
