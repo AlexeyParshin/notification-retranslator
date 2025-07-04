@@ -15,7 +15,7 @@
         <TextView
                 android:text="@string/no_apps_found"
                 android:textAlignment="center"
-                android:fontFamily="casual"
+                style="@style/RetroButton"
                 android:id="@+id/appName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

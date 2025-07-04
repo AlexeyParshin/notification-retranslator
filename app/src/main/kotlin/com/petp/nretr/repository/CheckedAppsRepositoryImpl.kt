@@ -1,6 +1,7 @@
 package com.petp.nretr.com.petp.nretr.repository
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.petp.nretr.module.CHECKED_APPS_PACKAGE_NAMES_KEY
 import javax.inject.Inject
 import javax.inject.Named
@@ -14,6 +15,6 @@ class CheckedAppsRepositoryImpl @Inject constructor(
     }
 
     override fun saveCheckedApps(checkedApps: Set<String>) {
-        checkedAppsPreferences.edit().putStringSet(CHECKED_APPS_PACKAGE_NAMES_KEY, checkedApps.toSet()).apply()
+        checkedAppsPreferences.edit { putStringSet(CHECKED_APPS_PACKAGE_NAMES_KEY, checkedApps.toSet()) }
     }
 }

@@ -1,6 +1,7 @@
 package com.petp.nretr.com.petp.nretr.repository
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.petp.nretr.module.NOTIFICATIONS
@@ -20,9 +21,9 @@ class NotificationRepositoryImpl @Inject constructor(
         if (notifications.size >= NOTIFICATION_LIMIT) {
             notifications.removeAt(0) // remove the oldest notification if there are already 15 notifications
         }
-        notifications.add(text) // add the new notification
+        notifications.add(text) // add new notification
         val notificationsJson = gson.toJson(notifications)
-        sharedPreferences.edit().putString(NOTIFICATIONS, notificationsJson).apply()
+        sharedPreferences.edit { putString(NOTIFICATIONS, notificationsJson) }
     }
 
     override fun getNotifications(): List<String> {
