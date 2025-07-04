@@ -7,29 +7,44 @@
         android:layout_height="match_parent"
         tools:context="com.petp.nretr.activities.MainActivity">
     <TextView
+            android:id="@+id/notificationsFrame"
             android:layout_width="255dp"
             android:layout_height="685dp"
             android:text="@string/no_notifications_found"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:background="@drawable/textview_border"
+            android:theme="@style/Theme.AppCompat.DayNight"
+            style="@style/RetroTextView"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintHorizontal_bias="0.102" android:id="@+id/notificationsFrame"/>
+            app:layout_constraintHorizontal_bias="0.102"/>
     <Button
+            style="@style/RetroButton"
+            android:id="@+id/appsButton"
+            android:layout_width="95dp"
+            android:layout_height="50dp"
             android:text="@string/appsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/appsButton"
             app:layout_constraintStart_toEndOf="@+id/notificationsFrame"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.067"/>
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="@+id/notificationsFrame"
+            app:layout_constraintBottom_toBottomOf="@+id/notificationsFrame"
+            app:layout_constraintVertical_bias="0.0"/>
     <Button
-            android:text="@string/clearButton"
+            style="@style/RetroButton"
+            android:id="@+id/clear_notifications_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/clear_notifications_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appsButton" app:layout_constraintVertical_bias="0.057"
-            app:layout_constraintStart_toEndOf="@+id/notificationsFrame" app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_height="wrap_content"
+            android:text="@string/clearButton"
+            app:layout_constraintTop_toBottomOf="@+id/appsButton"
+            app:layout_constraintStart_toStartOf="@+id/appsButton"
+            app:layout_constraintEnd_toEndOf="@+id/appsButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.0"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

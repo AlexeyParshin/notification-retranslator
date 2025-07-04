@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RetroTextView">
+        <item name="android:fontFamily">@font/press_start_2p_style</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/borderColor</item>
+    </style>
+    <style name="RetroButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:fontFamily">@font/press_start_2p</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/borderColor</item>
+    </style>
+</resources>

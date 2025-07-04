@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">NotyR</string>
     <string name="no_notifications_found">*No notifications found*</string>
+    <string name="no_apps_found">*No apps found*</string>
     <string name="appsButton">Apps</string>
     <string name="clearButton">Clear</string>
     <string name="sendNotification">Send</string>
+    <string name="back">Send</string>
 </resources>

@@ -12,11 +12,12 @@
             app:layout_constraintBottom_toTopOf="@+id/backButton"/>
 
     <Button
+            style="@style/RetroButton"
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
-            android:text="Back"
+            android:text="@string/back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

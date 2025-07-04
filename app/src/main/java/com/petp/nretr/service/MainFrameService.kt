@@ -59,7 +59,7 @@ class MainFrameService @Inject constructor() : Service() {
     }
 
     private fun updateNotificationsFrame() {
-        val notifications = notificationService.getNotifications()
+        val notifications = notificationService.getNotifications().ifEmpty { return }
 
         // Create an Intent with the custom action
         val intent = Intent(ACTION_UPDATE_NOTIFICATION_FRAME)
