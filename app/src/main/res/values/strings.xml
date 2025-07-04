@@ -5,5 +5,5 @@
     <string name="appsButton">Apps</string>
     <string name="clearButton">Clear</string>
     <string name="sendNotification">Send</string>
-    <string name="back">Send</string>
+    <string name="back">Back</string>
 </resources>
