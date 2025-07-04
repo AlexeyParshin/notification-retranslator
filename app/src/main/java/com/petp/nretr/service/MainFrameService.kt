@@ -6,14 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import androidx.annotation.RequiresApi
+import com.petp.nretr.BuildConfig
+import com.petp.nretr.activities.MainActivity
 import com.petp.nretr.activities.MainActivity.Companion.ACTION_UPDATE_NOTIFICATION_FRAME
-import com.petp.nretr.activities.MainActivity.Companion.NEW_NOTIFICATIONS
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class MainFrameService @Inject constructor() : Service() {
 
     companion object {
@@ -48,10 +47,15 @@ class MainFrameService @Inject constructor() : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        context.registerReceiver(
-            notificationReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION),
-            Context.RECEIVER_NOT_EXPORTED
-        )
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            RECEIVER_NOT_EXPORTED
+        } else {
+            0
+        }
+
+        context.registerReceiver(notificationReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION), flags)
+        updateNotificationsFrame()
     }
 
     private fun updateNotificationsFrame() {
@@ -59,9 +63,10 @@ class MainFrameService @Inject constructor() : Service() {
 
         // Create an Intent with the custom action
         val intent = Intent(ACTION_UPDATE_NOTIFICATION_FRAME)
+        intent.setPackage(BuildConfig.APPLICATION_ID)
 
         // Put the notifications data into the Intent
-        intent.putStringArrayListExtra(NEW_NOTIFICATIONS, ArrayList(notifications))
+        intent.putStringArrayListExtra(MainActivity.NOTIFICATIONS, ArrayList(notifications))
 
         // Send the Intent
         context.sendBroadcast(intent)
@@ -72,6 +77,7 @@ class MainFrameService @Inject constructor() : Service() {
 
         // Send a broadcast to clear the notifications frame
         val intent = Intent(ACTION_CLEAR_NOTIFICATION_FRAME)
+        intent.setPackage(BuildConfig.APPLICATION_ID)
         context.sendBroadcast(intent)
     }
 }

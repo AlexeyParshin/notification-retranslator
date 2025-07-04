@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.petp.nretr.R
 import com.petp.nretr.service.MainFrameService
 import com.petp.nretr.service.MainFrameService.Companion.ACTION_CLEAR_NOTIFICATION_FRAME
+import com.petp.nretr.service.TelegramBotService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,19 +18,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var mainFrameService: MainFrameService
 
     companion object {
         const val ACTION_UPDATE_NOTIFICATION_FRAME = "com.petp.nretr.UPDATE_NOTIFICATION_FRAME"
-        const val NEW_NOTIFICATIONS = "new_notifications"
+        const val NOTIFICATIONS = "notifications"
     }
 
     private val frameUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val notifications = intent.getStringArrayListExtra(NEW_NOTIFICATIONS)
+            val notifications = intent.getStringArrayListExtra(NOTIFICATIONS)
             if (notifications != null) {
                 updateNotificationsFrame(notifications)
             }
@@ -47,12 +46,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        registerReceiver(frameUpdateReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION_FRAME), RECEIVER_NOT_EXPORTED)
-        registerReceiver(clearFrameReceiver, IntentFilter(ACTION_CLEAR_NOTIFICATION_FRAME), RECEIVER_NOT_EXPORTED)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            RECEIVER_NOT_EXPORTED
+        } else {
+            0
+        }
 
-        // do i need this?
-        val serviceIntent = Intent(this, MainFrameService::class.java)
-        startService(serviceIntent)
+        registerReceiver(frameUpdateReceiver, IntentFilter(ACTION_UPDATE_NOTIFICATION_FRAME), flags)
+        registerReceiver(clearFrameReceiver, IntentFilter(ACTION_CLEAR_NOTIFICATION_FRAME), flags)
+
+        val mainFrameService = Intent(this, MainFrameService::class.java)
+        startService(mainFrameService)
+        val telegramBotService = Intent(this, TelegramBotService::class.java)
+        startService(telegramBotService)
 
         if (!isNotificationServiceEnabled()) {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))

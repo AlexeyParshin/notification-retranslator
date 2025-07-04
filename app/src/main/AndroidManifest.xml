@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- not eligible for Google Play but i don't care -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -26,10 +26,11 @@
                 <action android:name="android.service.notification.NotificationListenerService"/>
             </intent-filter>
         </service>
-        <service android:name=".service.MainFrameService"/>
+        <service android:name=".service.MainFrameService" tools:targetApi="33"/>
+        <service android:name=".service.TelegramBotService" tools:targetApi="33"/>
         <activity
                 android:name="com.petp.nretr.activities.MainActivity"
-                android:exported="true">
+                android:exported="true" tools:targetApi="33">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -1,11 +1,10 @@
 package com.petp.nretr.service
 
+import android.app.Service
+import android.content.Intent
 import android.util.Log
-import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.ServiceLifecycleDispatcher
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
-import com.github.kotlintelegrambot.dispatcher.Dispatcher
 import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.ParseMode
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TelegramBotService @Inject constructor() : LifecycleService() {
+class TelegramBotService @Inject constructor() : Service() {
     @Inject
     lateinit var notificationService: NotificationService
 
@@ -31,16 +30,18 @@ class TelegramBotService @Inject constructor() : LifecycleService() {
         token = BuildConfig.TELEGRAM_BOT_TOKEN
 
         dispatch {
-            setupHistoryCommand(this)
+            command("history") {
+                sendHistory()
+            }
         }
     }
 
-    private val serviceLifecycleDispatcher = ServiceLifecycleDispatcher(this)
+    override fun onBind(intent: Intent?): Nothing {
+        throw UnsupportedOperationException("Not implemented")
+    }
 
     override fun onCreate() {
         super.onCreate()
-        serviceLifecycleDispatcher.onServicePreSuperOnCreate()
-        serviceLifecycleDispatcher.onServicePreSuperOnBind()
         onStart()
     }
 
@@ -62,12 +63,6 @@ class TelegramBotService @Inject constructor() : LifecycleService() {
                     Log.e("TelegramBotService", "Error sending message: ${it.get()}")
                 }
             )
-        }
-    }
-
-    private fun setupHistoryCommand(dispatcher: Dispatcher) {
-        dispatcher.command("history") {
-            sendHistory()
         }
     }
 
@@ -93,7 +88,6 @@ class TelegramBotService @Inject constructor() : LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
         job.cancel() // cancel the job when the service is destroyed
-        serviceLifecycleDispatcher.onServicePreSuperOnDestroy()
         onStop()
     }
 }
